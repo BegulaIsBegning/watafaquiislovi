@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <link rel="icon" href="favicon.png">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Auburn</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="24" height="24">
+          <rect x="0" y="0" width="40" height="40" fill="var(--red)"/>
+          <path d="M0 0 H40 V40 H20 A20 20 0 0 1 0 20 Z" fill="var(--ink)"/>
+          <circle cx="27" cy="13" r="7" fill="var(--yellow)"/>
+        </svg>
+      </span>
+      <div>
+        <h1>Auburn</h1>
+        <div class="brand-sub">Auburn Broadcasting Service</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-clock" id="clockDisplay">--:--:--</div>
+      <button type="button" class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="15" height="15"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M22.5 12h-3M4.5 12h-3M19.07 4.93l-2.12 2.12M7.05 16.95l-2.12 2.12M19.07 19.07l-2.12-2.12M7.05 7.05L4.93 4.93" stroke-linecap="round"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="15" height="15"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SCAN SECTION -->
+  <section id="scanSection">
+    <div class="scene" id="channelGrid">
+      <div class="mini-screen">
+        <div class="preview-placeholder"></div>
+        <div class="screen-label">
+          <span class="scrolling-meta">CH-01 // SIGNAL_STABLE</span>
+          <span class="status-tag">LIVE</span>
+        </div>
+      </div>
+      <div class="mini-screen">
+        <div class="preview-placeholder"></div>
+        <div class="screen-label">
+          <span class="scrolling-meta">CH-02 // SIGNAL_LOST</span>
+          <span class="status-tag" style="color: var(--red); border-color: var(--red); animation:none; opacity:.5;">OFFLINE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ch-label" style="margin-top:20px;">▸ Available Channels</div>
+    <ul id="channelList" class="ch-list"></ul>
+    <p id="noChannels" class="no-ch hidden">Waiting for signals.</p>
+  </section>
+
+  <!-- TV SECTION -->
+  <section id="tvSection" class="hidden">
+    <div class="tv-wrap">
+      <div class="tv-bezel">
+        <div class="tv-brand">Auburn 1.2.45 (25.4.2026)</div>
+        <div class="tv-screen" id="tvScreen">
+          <video id="tvVideo" playsinline autoplay></video>
+          <div class="tv-noise"></div>
+          <div id="tvOverlay" class="tv-overlay hidden">
+            <p id="tvOverlayMsg">No Signal</p>
+          </div>
+        </div>
+        <div class="tv-bottom">
+          <div class="tv-leds">
+            <div class="led led-g"></div>
+            <div class="led led-r"></div>
+          </div>
+          <span class="tuned" id="tunedChannel"></span>
+          <div class="tv-btns">
+            <div class="vol-row">
+              <span>VOL</span>
+              <input type="range" id="volControl" min="0" max="1" step="0.01" value="1"/>
+            </div>
+            <button class="btn-back" id="btnBack">◀ Channels</button>
+          </div>
+        </div>
+      </div>
+      <div class="now-playing-bar hidden" id="nowPlayingBar">
+        <div class="np-top">
+          <div class="np-onair">
+            <span class="np-tag">ON NOW</span>
+            <span class="np-name" id="npName">—</span>
+          </div>
+          <button class="np-toggle" id="btnToggleSchedule" type="button">📋 Schedule</button>
+        </div>
+        <p class="np-desc" id="npDesc"></p>
+        <p class="np-next" id="npNext"></p>
+        <div class="schedule-list hidden" id="scheduleList"></div>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Waiting for Signals</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="app.js"></script>
+<script>
+(function(){
+  var saved = localStorage.getItem('auburn-theme');
+  var theme = saved || 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  var btn = document.getElementById('themeToggle');
+  if (btn) {
+    btn.addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme');
+      var next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('auburn-theme', next);
+    });
+  }
+})();
+</script>
+</body>
+</html>
